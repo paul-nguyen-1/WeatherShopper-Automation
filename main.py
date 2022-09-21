@@ -46,27 +46,67 @@ class WeatherShopper:
             self.driver.find_element(By.XPATH,'/html/body/div/div[3]/div[2]/a/button').click()
             print('The current temperature is currently ' + temperature)
 
-
     def moisturizer(self):
         """Add two moisturizers to your cart. First, select the least expensive mositurizer that contains Aloe.
         For your second moisturizer, select the least expensive moisturizer that contains almond.
         Click on cart when you are done."""
+        self.driver.get('https://weathershopper.pythonanywhere.com/moisturizer')
 
+    def get_aloe(self):
+        """Get cheapest aloe and parse"""
+        self.current_aloe = []
+        aloes = self.driver.find_elements(By.XPATH, "//*[contains(text(),'Aloe') or \
+               contains(text(),'aloe')]/following-sibling::p")
 
-    def sunscreen(self):
-        """Add two sunscreens to your cart. First, select the least expensive sunscreen that is SPF-50.
-        For your second sunscreen, select the least expensive sunscreen that is SPF-30.
-        Click on the cart when you are done."""
+        for aloe in aloes:
+            for cheapest_aloe in aloe.text.split():
+                if cheapest_aloe.isdigit():
+                    self.current_aloe.append(cheapest_aloe)
+                    self.current_aloe.sort()
 
-        self.driver.get('https://weathershopper.pythonanywhere.com/sunscreen')
-        sunscreens = self.driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/h2').text
-        if sunscreens == 'Sunscreens':
-            print("Treat your skin right. Don't leave your home without your favorite sunscreen. Say goodbye to sunburns.")
+        self.driver.find_element(By.XPATH, "//*[contains(text(),'Aloe') or \
+               contains(text(),'aloe')]/following-sibling::p[contains(text(),%s)]/following-sibling::\
+                   button[text() = 'Add']" % self.current_aloe[0]).click()
+
+        print("Currently the cheapest Aloe moisturizer is priced at: " + self.current_aloe[0] + " rupees")
+
+    def get_almond(self):
+        """Get cheapest almond moisturizer and parse"""
+        self.current_almond = []
+        almonds = self.driver.find_elements(By.XPATH, "//*[contains(text(),'Almond') or \
+                       contains(text(),'almond')]/following-sibling::p")
+
+        for almond in almonds:
+            for cheapest_almond in almond.text.split():
+                if cheapest_almond.isdigit():
+                    self.current_almond.append(cheapest_almond)
+                    self.current_almond.sort()
+
+        self.driver.find_element(By.XPATH, "//*[contains(text(),'Almond') or \
+                       contains(text(),'almond')]/following-sibling::p[contains(text(),%s)]/following-sibling::\
+                           button[text() = 'Add']" % self.current_almond[0]).click()
+
+        print("Currently the cheapest Almond moisturizer is priced at: " + self.current_almond[0] + " rupees")
+
+    def cart_click_and_purchase_moisturizer(self):
+        """Verify lotions and purchase"""
+        self.driver.find_element(By.CLASS_NAME, 'thin-text.nav-link').click()
+        cheapest_moisturizers = []
+        moisturizers = self.driver.find_elements(By.XPATH, "//*[contains(text(),'Aloe') or \
+                contains(text(),'aloe') or contains(text(),'Almond') or contains(text(),'almond')]/following-sibling::td")
+
+        for moisturizer in moisturizers:
+            current_moisturizer = moisturizer.text
+            cheapest_moisturizers.append(current_moisturizer)
+
+        if self.current_aloe[0] and self.current_almond[0] in cheapest_moisturizers:
+            print("Processing your order for both moisturizer lotions now.")
+            self.driver.find_element(By.XPATH, '/html/body/div[1]/div[3]/form/button/span').click()
         else:
-            return None
+            print('Failed')
 
     def get_spf_30(self):
-        """Get spf_30"""
+        """Get cheapest SPF-30 price and parse"""
         self.current_spf_30 = []
         sunscreen = self.driver.find_elements(By.XPATH, "//*[contains(text(),'SPF-30') or \
         contains(text(),'spf-30')]/following-sibling::p")
@@ -81,10 +121,10 @@ class WeatherShopper:
         contains(text(),'spf-30')]/following-sibling::p[contains(text(),%s)]/following-sibling::\
             button[text() = 'Add']" % self.current_spf_30[0]).click()
 
-        print("Currently the cheapest SPF-30 sunscreen is priced at: " + self.current_spf_30[0])
+        print("Currently the cheapest SPF-30 sunscreen is priced at: " + self.current_spf_30[0] + " rupees")
 
     def get_spf_50(self):
-        """Get spf_50"""
+        """Get Cheapest SPF-50 price and parse"""
         self.current_spf_50 = []
         sunscreen = self.driver.find_elements(By.XPATH, "//*[contains(text(),'SPF-50') or \
         contains(text(),'spf-50')]/following-sibling::p")
@@ -98,10 +138,10 @@ class WeatherShopper:
         self.driver.find_element(By.XPATH, "//*[contains(text(),'SPF-50') or \
         contains(text(),'spf-50')]/following-sibling::p[contains(text(),%s)]/following-sibling::\
             button[text() = 'Add']" % self.current_spf_50[0]).click()
-        print("Currently the cheapest SPF-50 sunscreen is priced at: " + self.current_spf_50[0])
+        print("Currently the cheapest SPF-50 sunscreen is priced at: " + self.current_spf_50[0] + " rupees")
 
 
-    def cart_click_and_purchase(self):
+    def cart_click_and_purchase_sunscreen(self):
         """Verify items are correct and go to payment form"""
         self.driver.find_element(By.CLASS_NAME, 'thin-text.nav-link').click()
         cheapest_sunscreens = []
@@ -117,40 +157,62 @@ class WeatherShopper:
             self.driver.find_element(By.XPATH, '/html/body/div[1]/div[3]/form/button/span').click()
 
     def card_payment(self):
-        """Input card information from Stripe"""
+        """Within the iFrame, input card information from Stripe"""
+        self.driver.switch_to.frame(self.driver.find_element(By.TAG_NAME,'iframe'))
 
-        """
-        wait = WebDriverWait(self.driver, 30)
+        wait = WebDriverWait(self.driver, 20)
         email = wait.until(EC.element_to_be_clickable((By.ID, 'email')))
-        email.send_keys('Test Keys')
+        email.send_keys(self.email)
 
-        card_number = self.driver.find_element(By.ID, 'card_number')
-        card_number.send_keys(self.card_number)
+        card_number = wait.until(EC.element_to_be_clickable((By.ID, 'card_number')))
+        for delay in self.card_number:
+            card_number.send_keys(delay)
+            time.sleep(.1)
 
-        card_year = self.driver.find_element(By.ID, 'cc-exp')
-        card_year.send_keys(self.card_year)
+        card_year = wait.until(EC.element_to_be_clickable((By.ID, 'cc-exp')))
+        for delay in self.card_year:
+            card_year.send_keys(delay)
+            time.sleep(.1)
 
-        card_cvc = self.driver.find_element(By.ID, 'cc-csc')
+        card_cvc = wait.until(EC.element_to_be_clickable((By.ID, 'cc-csc')))
         card_cvc.send_keys(self.cvc)
 
-        zipcode = self.driver.find_element(By.ID, 'billing-zip')
+        zipcode = wait.until(EC.element_to_be_clickable((By.ID, 'billing-zip')))
         zipcode.send_keys(self.zipcode)
-        """
 
-    def run_automation(self):
-        self.start_website()
-        self.get_current_temp()
-        time.sleep(3)
-        self.sunscreen()
+        self.driver.find_element(By.CLASS_NAME, 'iconTick').click()
+        self.driver.switch_to.default_content()
+        print('Purchase Successful!')
+
+    def dynamic_automate(self):
+        """Weather decides if we need sunscreens or moisturizers!"""
+        sunscreens = self.driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/h2').text
+        if sunscreens == 'Sunscreens':
+            print("Treat your skin right. Don't leave your home without your favorite sunscreen. Say goodbye to sunburns.")
+            self.sunscreen_automate()
+        else:
+            print("Don't let cold weather ruin your skin. Use your favourite moisturizer and keep your skin stay young.")
+            self.moisturizer_automate()
+
+
+    def moisturizer_automate(self):
+        """Cold days we need to moisturize!"""
+        self.get_aloe()
+        self.get_almond()
+        self.cart_click_and_purchase_moisturizer()
+
+    def sunscreen_automate(self):
+        """Sunny days we get sunscreen!"""
         self.get_spf_30()
         self.get_spf_50()
-        self.cart_click_and_purchase()
-        time.sleep(2)
+        self.cart_click_and_purchase_sunscreen()
+
+    def run_automation(self):
+        """Dynamic functions to run our automation test"""
+        self.start_website()
+        self.get_current_temp()
+        self.dynamic_automate()
         self.card_payment()
-
-
-
-
 
 if __name__ == '__main__':
     with open('config.json') as config_file:
