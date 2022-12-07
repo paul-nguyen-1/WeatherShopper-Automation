@@ -19,7 +19,7 @@ The [Qxf2](https://qxf2.com/?utm_source=github&utm_medium=click&utm_campaign=Wea
 <li> Waiting for form submission </li>
 </ul> 
  
-# Objectives programming
+# Objectives Programming
 <ul>
 <li>if-else  </li>
 <li>typecast scraped data  </li>
