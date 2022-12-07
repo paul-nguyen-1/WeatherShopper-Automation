@@ -32,6 +32,5 @@ The [Qxf2](https://qxf2.com/?utm_source=github&utm_medium=click&utm_campaign=Wea
 <li>work with 2-D arrays to construct a good locator </li>
 </ul>
 
- # Demo
 
 
