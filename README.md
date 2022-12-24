@@ -1,9 +1,13 @@
-# WeatherShopper-Automation
-
-# Project based learning created by the Qxf2 team.
+# Project based Learning
 The [Qxf2](https://qxf2.com/?utm_source=github&utm_medium=click&utm_campaign=Weather%20shopper) Team created a web application to help testers learn Selenium and practice a programming language simultaneously. You can visit http://weathershopper.pythonanywhere.com. Each page will have an 'i' icon that you can click and read the task you need to complete.
 
-# Objectives using Selenium
+# Technologies Used:
+<ul>
+<li>Python</li>
+<li>Selenium</li>
+</ul>
+
+# Learning Objectives using Selenium
 <ul>
 <li>Scraping text </li>
 <li>Button click </li>
@@ -13,14 +17,20 @@ The [Qxf2](https://qxf2.com/?utm_source=github&utm_medium=click&utm_campaign=Wea
 <li>Handle multiple paths to a button click  </li>
 <li>Keep track of dynamic data (e.g.: items change every time page is loaded)  </li>
 <li> Waiting for form submission </li>
+</ul> 
  
-# Objectives programming
+# Objectives Programming
+<ul>
 <li>if-else  </li>
 <li>typecast scraped data  </li>
 <li>loop through elements  </li>
-<li>write code to identify the minimum e) substring search </li>
+<li>write code to identify the minimum  </li>
+<li>substring search </li>
 <li>write good methods </li>
 <li>simple arithmetic operations (sum of)  </li>
 <li>assert correctness  </li>
 <li>work with 2-D arrays to construct a good locator </li>
+</ul>
+
+
 
