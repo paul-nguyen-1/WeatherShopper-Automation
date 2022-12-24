@@ -40,7 +40,6 @@ class WeatherShopper:
             #Click Moisturizer Button
             self.driver.find_element(By.XPATH,'/html/body/div/div[3]/div[1]/a/button').click()
             print('The current temperature is currently ' + temperature)
-            print("Don't let cold weather ruin your skin. Use your favourite moisturizer and keep your skin stay young.")
         else:
             #Click Sunscreen Button
             self.driver.find_element(By.XPATH,'/html/body/div/div[3]/div[2]/a/button').click()
