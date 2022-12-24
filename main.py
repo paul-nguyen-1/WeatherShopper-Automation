@@ -13,7 +13,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 class WeatherShopper:
     def __init__(self, data):
         """Initialize data"""
-        s = Service('/Users/swaggy/Downloads/chromedriver')
+        s = Service('/Users/swaggy/Downloads/chromedriver 2')
         load_dotenv()
         self.driver = webdriver.Chrome(service=s)
         self.email = data['email']
